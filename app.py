@@ -12,8 +12,8 @@ from io import BytesIO
 # PAGE CONFIG  (must be first Streamlit call)
 # ─────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="ThreatScope — Unified Threat Intelligence",
-    page_icon="🛡️",
+    page_title="CORVUS — Unified Threat Intelligence",
+    page_icon="🦅",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -42,220 +42,252 @@ if "theme" not in st.session_state:
 # ─────────────────────────────────────────────────────────────
 # THEME DEFINITIONS
 # ─────────────────────────────────────────────────────────────
-THEMES = {
-    "dark": {
-        "--bg-primary":    "#0a0d12",
-        "--bg-secondary":  "#0f1318",
-        "--bg-card":       "#141920",
-        "--bg-hover":      "#1a2230",
-        "--accent-cyan":   "#00d4ff",
-        "--accent-green":  "#00ff88",
-        "--accent-red":    "#ff3860",
-        "--accent-orange": "#ff8c00",
-        "--accent-yellow": "#ffd700",
-        "--text-primary":  "#e2e8f0",
-        "--text-muted":    "#64748b",
-        "--border":        "#1e2d40",
-    },
-    "light": {
-        "--bg-primary":    "#f0f4f8",
-        "--bg-secondary":  "#e2e8f0",
-        "--bg-card":       "#ffffff",
-        "--bg-hover":      "#dde6f0",
-        "--accent-cyan":   "#0284c7",
-        "--accent-green":  "#059669",
-        "--accent-red":    "#dc2626",
-        "--accent-orange": "#d97706",
-        "--accent-yellow": "#ca8a04",
-        "--text-primary":  "#0f172a",
-        "--text-muted":    "#64748b",
-        "--border":        "#cbd5e1",
-    },
-    "green": {  # terminal / matrix aesthetic
-        "--bg-primary":    "#030d03",
-        "--bg-secondary":  "#071007",
-        "--bg-card":       "#0a1a0a",
-        "--bg-hover":      "#0f250f",
-        "--accent-cyan":   "#00ff41",
-        "--accent-green":  "#39ff14",
-        "--accent-red":    "#ff0040",
-        "--accent-orange": "#ff8000",
-        "--accent-yellow": "#ccff00",
-        "--text-primary":  "#c8ffc8",
-        "--text-muted":    "#3a7a3a",
-        "--border":        "#1a3a1a",
-    },
-    "solarized": {
-        "--bg-primary":    "#002b36",
-        "--bg-secondary":  "#073642",
-        "--bg-card":       "#073642",
-        "--bg-hover":      "#0d4e5f",
-        "--accent-cyan":   "#2aa198",
-        "--accent-green":  "#859900",
-        "--accent-red":    "#dc322f",
-        "--accent-orange": "#cb4b16",
-        "--accent-yellow": "#b58900",
-        "--text-primary":  "#839496",
-        "--text-muted":    "#586e75",
-        "--border":        "#0d4e5f",
-    },
+def inject_css() -> None:
+    st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;700&display=swap');
+
+/* ── Neo-Brutalist Base ── */
+html, body, [data-testid="stAppViewContainer"] {
+  background-color: #f0ebe3 !important;
+  color: #111 !important;
+  font-family: 'Inter', sans-serif !important;
 }
 
-def inject_css(theme_name: str) -> None:
-    t = THEMES.get(theme_name, THEMES["dark"])
-    vars_block = "\n".join(f"  {k}: {v};" for k, v in t.items())
-    st.markdown(f"""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Rajdhani:wght@400;500;600;700&display=swap');
+[data-testid="stSidebar"] { display: none !important; }
+[data-testid="collapsedControl"] { display: none !important; }
+[data-testid="stAppViewContainer"] > section:first-child { padding-top: 0.5rem !important; }
 
-:root {{
-{vars_block}
-}}
-
-/* ── Layout ── */
-html, body, [data-testid="stAppViewContainer"] {{
-  background-color: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
-  font-family: 'Rajdhani', sans-serif !important;
-}}
-
-/* Hide Streamlit sidebar completely */
-[data-testid="stSidebar"] {{ display: none !important; }}
-[data-testid="collapsedControl"] {{ display: none !important; }}
-
-/* Header padding tweak */
-[data-testid="stAppViewContainer"] > section:first-child {{ padding-top: 0.5rem !important; }}
-
-h1, h2, h3, h4 {{
-  font-family: 'Rajdhani', sans-serif !important;
-  letter-spacing: 0.05em;
-  color: var(--text-primary) !important;
-}}
+h1, h2, h3, h4 {
+  font-family: 'Space Mono', monospace !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+  color: #111 !important;
+}
 
 /* ── Inputs ── */
 .stTextInput > div > div > input,
-.stTextArea > div > div > textarea,
-.stSelectbox > div > div > div {{
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--text-primary) !important;
-  font-family: 'JetBrains Mono', monospace !important;
+.stTextArea > div > div > textarea {
+  background: #fff !important;
+  border: 2px solid #111 !important;
+  color: #111 !important;
+  font-family: 'Space Mono', monospace !important;
   font-size: 13px !important;
-  border-radius: 6px !important;
-}}
+  border-radius: 0 !important;
+  padding: 8px 12px !important;
+}
 .stTextInput > div > div > input:focus,
-.stTextArea > div > div > textarea:focus {{
-  border-color: var(--accent-cyan) !important;
-  box-shadow: 0 0 0 1px var(--accent-cyan) !important;
-}}
+.stTextArea > div > div > textarea:focus {
+  border-color: #ff3f00 !important;
+  box-shadow: 3px 3px 0 #111 !important;
+}
+.stSelectbox > div > div > div {
+  background: #fff !important;
+  border: 2px solid #111 !important;
+  color: #111 !important;
+  border-radius: 0 !important;
+  font-family: 'Space Mono', monospace !important;
+  font-size: 12px !important;
+}
 
 /* ── Buttons ── */
-.stButton > button {{
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-hover) 100%) !important;
-  color: var(--accent-cyan) !important;
-  border: 1px solid var(--accent-cyan) !important;
-  font-family: 'Rajdhani', sans-serif !important;
-  font-weight: 600 !important;
-  font-size: 14px !important;
+.stButton > button {
+  background: #111 !important;
+  color: #f0ebe3 !important;
+  border: 2px solid #111 !important;
+  font-family: 'Space Mono', monospace !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
   letter-spacing: 0.08em !important;
-  border-radius: 6px !important;
-  transition: all 0.2s ease !important;
-}}
-.stButton > button:hover {{
-  background: var(--accent-cyan) !important;
-  color: var(--bg-primary) !important;
-  box-shadow: 0 0 12px color-mix(in srgb, var(--accent-cyan) 40%, transparent) !important;
-}}
+  border-radius: 0 !important;
+  transition: all 0.1s ease !important;
+  text-transform: uppercase !important;
+}
+.stButton > button:hover {
+  background: #ff3f00 !important;
+  border-color: #ff3f00 !important;
+  color: #fff !important;
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 3px 3px 0 #111 !important;
+}
+.stButton > button:active {
+  transform: translate(0, 0) !important;
+  box-shadow: none !important;
+}
 
 /* ── Tabs ── */
-.stTabs [data-baseweb="tab-list"] {{
-  background: var(--bg-secondary) !important;
-  border-bottom: 1px solid var(--border) !important;
-  gap: 4px !important;
-}}
-.stTabs [data-baseweb="tab"] {{
+.stTabs [data-baseweb="tab-list"] {
+  background: #111 !important;
+  border-bottom: none !important;
+  gap: 0 !important;
+}
+.stTabs [data-baseweb="tab"] {
   background: transparent !important;
-  color: var(--text-muted) !important;
-  font-family: 'Rajdhani', sans-serif !important;
-  font-weight: 600 !important;
-  font-size: 14px !important;
-  letter-spacing: 0.06em !important;
+  color: #888 !important;
+  font-family: 'Space Mono', monospace !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.1em !important;
   border: none !important;
-  padding: 10px 20px !important;
-}}
-.stTabs [aria-selected="true"] {{
-  color: var(--accent-cyan) !important;
-  border-bottom: 2px solid var(--accent-cyan) !important;
-}}
+  border-right: 1px solid #333 !important;
+  padding: 12px 18px !important;
+  text-transform: uppercase !important;
+}
+.stTabs [aria-selected="true"] {
+  color: #ff3f00 !important;
+  background: #1a1a1a !important;
+  border-bottom: 3px solid #ff3f00 !important;
+}
 
 /* ── Expanders ── */
-[data-testid="stExpander"] {{
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 8px !important;
-}}
+[data-testid="stExpander"] {
+  background: #fff !important;
+  border: 2px solid #111 !important;
+  border-radius: 0 !important;
+}
 
 /* ── DataFrames ── */
-div[data-testid="stDataFrame"] {{ border: 1px solid var(--border) !important; border-radius: 8px !important; }}
-[data-testid="stDataFrame"] th {{ background: var(--bg-secondary) !important; color: var(--accent-cyan) !important; font-family: 'Rajdhani', sans-serif !important; }}
-[data-testid="stDataFrame"] td {{ background: var(--bg-card) !important; color: var(--text-primary) !important; font-family: 'JetBrains Mono', monospace !important; font-size: 12px !important; }}
+div[data-testid="stDataFrame"] { border: 2px solid #111 !important; border-radius: 0 !important; }
+[data-testid="stDataFrame"] th { background: #111 !important; color: #ff3f00 !important; font-family: 'Space Mono', monospace !important; font-size: 11px !important; }
+[data-testid="stDataFrame"] td { background: #fff !important; color: #111 !important; font-family: 'Space Mono', monospace !important; font-size: 11px !important; }
 
 /* ── Misc ── */
-.stAlert {{ background: var(--bg-card) !important; border: 1px solid var(--border) !important; }}
-label {{ color: var(--text-primary) !important; font-family: 'Rajdhani', sans-serif !important; font-size: 14px !important; font-weight: 500 !important; }}
-.stProgress > div > div {{ background: var(--accent-cyan) !important; }}
-div[data-testid="stSelectbox"] > div {{ background: var(--bg-card) !important; }}
-[data-testid="stSelectbox"] * {{ color: var(--text-primary) !important; background: var(--bg-card) !important; }}
+.stAlert { background: #fff !important; border: 2px solid #111 !important; border-radius: 0 !important; }
+label { color: #111 !important; font-family: 'Space Mono', monospace !important; font-size: 12px !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: .05em !important; }
+.stProgress > div > div { background: #ff3f00 !important; }
+div[data-testid="stSelectbox"] > div { background: #fff !important; }
+[data-testid="stSelectbox"] * { color: #111 !important; background: #fff !important; font-family: 'Space Mono', monospace !important; }
+.stCheckbox label { text-transform: none !important; letter-spacing: 0 !important; font-size: 13px !important; }
+.stSlider > div > div > div { background: #ff3f00 !important; }
 
-/* ── Custom components ── */
-.metric-card {{
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px 20px;
-  text-align: center;
-}}
-.metric-value {{
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--accent-cyan);
-}}
-.metric-label {{
-  font-size: 12px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-top: 4px;
-}}
-.result-card {{
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 18px;
-  margin: 8px 0;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-}}
-.result-card.malicious  {{ border-left: 3px solid var(--accent-red); }}
-.result-card.clean      {{ border-left: 3px solid var(--accent-green); }}
-.result-card.suspicious {{ border-left: 3px solid var(--accent-orange); }}
-.result-card.unknown    {{ border-left: 3px solid var(--text-muted); }}
-.header-banner {{
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-hover) 100%);
-  border: 1px solid var(--border);
-  border-bottom: 2px solid var(--accent-cyan);
-  border-radius: 10px;
-  padding: 18px 28px;
-  margin-bottom: 18px;
+/* ── Neo-Brutalist custom components ── */
+.corvus-header {
+  background: #111;
+  border-bottom: 4px solid #ff3f00;
+  padding: 16px 24px;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-}}
+}
+.corvus-logo {
+  font-family: 'Space Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .1em;
+}
+.corvus-logo span { color: #ff3f00; }
+.corvus-tagline {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: #888;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+.corvus-pill {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  padding: 3px 8px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.metric-card {
+  background: #fff;
+  border: 2px solid #111;
+  border-radius: 0;
+  padding: 14px 18px;
+  text-align: center;
+  position: relative;
+}
+.metric-card::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  z-index: -1;
+}
+.metric-value {
+  font-family: 'Space Mono', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+}
+.metric-label {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+  font-family: 'Space Mono', monospace;
+}
+
+.result-card {
+  background: #fff;
+  border: 2px solid #111;
+  border-radius: 0;
+  padding: 12px 16px;
+  margin: 6px 0;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  position: relative;
+}
+.result-card::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  z-index: -1;
+}
+.result-card.malicious  { border-left: 5px solid #ff3f00; }
+.result-card.clean      { border-left: 5px solid #16a34a; }
+.result-card.suspicious { border-left: 5px solid #d97706; }
+.result-card.unknown    { border-left: 5px solid #888; }
+
+.corvus-section {
+  border: 2px solid #111;
+  border-radius: 0;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.corvus-section-header {
+  background: #111;
+  padding: 8px 14px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ff3f00;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.corvus-section-body {
+  background: #fff;
+  padding: 12px 14px;
+}
+.ioc-detect-bar {
+  background: #fff;
+  border: 2px solid #111;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 </style>
 """, unsafe_allow_html=True)
 
-inject_css(st.session_state["theme"])
+inject_css()
 
 # ─────────────────────────────────────────────────────────────
 # HELPER FUNCTIONS
@@ -546,7 +578,7 @@ def hibp_check(email: str, api_key: str) -> dict:
     try:
         r = requests.get(
             f"https://haveibeenpwned.com/api/v3/breachedaccount/{email}",
-            headers={"hibp-api-key": api_key, "User-Agent": "ThreatScope-Platform"},
+            headers={"hibp-api-key": api_key, "User-Agent": "CORVUS-Platform"},
             params={"truncateResponse": False}, timeout=15,
         )
         if r.status_code == 200:
@@ -712,24 +744,24 @@ def dns_lookup(domain: str) -> dict:
 # ─────────────────────────────────────────────────────────────
 
 def render_result_cards(results: list[dict]) -> None:
-    COLOR_MAP = {"malicious": "#ff3860", "suspicious": "#ff8c00", "clean": "#00ff88", "unknown": "#64748b"}
+    COLOR_MAP = {"malicious": "#ff3f00", "suspicious": "#d97706", "clean": "#16a34a", "unknown": "#888"}
     SKIP = {"source", "ioc", "type", "verdict", "timestamp", "raw", "session_ioc"}
     for r in results:
         verdict = r.get("verdict", "Unknown")
         sev     = severity_color(verdict)
-        color   = COLOR_MAP.get(sev, "#64748b")
-        details = " | ".join(
-            f"{k}: <span style='color:var(--text-primary);'>{v}</span>"
+        color   = COLOR_MAP.get(sev, "#888")
+        details = " &nbsp;·&nbsp; ".join(
+            f"<span style='color:#888;font-size:10px;'>{k}:</span> <span style='color:#111;'>{v}</span>"
             for k, v in r.items()
             if k not in SKIP and v and v != "N/A"
         )
         st.markdown(f"""
 <div class='result-card {sev}'>
-  <div style='display:flex;justify-content:space-between;align-items:center;'>
-    <span style='color:var(--accent-cyan);font-weight:600;font-size:14px;'>{r.get("source","")}</span>
-    <span style='color:{color};font-weight:700;font-size:14px;'>{verdict}</span>
+  <div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;'>
+    <span style='font-family:Space Mono,monospace;font-weight:700;font-size:13px;color:#111;letter-spacing:.05em;'>{r.get("source","").upper()}</span>
+    <span style='font-family:Space Mono,monospace;font-weight:700;font-size:13px;color:{color};text-transform:uppercase;letter-spacing:.05em;'>{verdict}</span>
   </div>
-  <div style='color:var(--text-muted);margin-top:6px;font-size:11px;line-height:1.8;'>{details}</div>
+  <div style='color:#555;font-size:11px;line-height:1.9;font-family:Space Mono,monospace;'>{details}</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -747,7 +779,7 @@ def run_checks(ioc: str, checks: list[tuple]) -> list[dict]:
     for i, (name, fn) in enumerate(checks):
         status_txt.markdown(
             f"<span style='font-family:JetBrains Mono,monospace;font-size:13px;"
-            f"color:var(--accent-cyan);'>Querying {name}…</span>",
+            f"color:#ff3f00;font-weight:700;text-transform:uppercase;'>↳ QUERYING {name}…</span>",
             unsafe_allow_html=True,
         )
         results.append(fn())
@@ -763,53 +795,41 @@ def run_checks(ioc: str, checks: list[tuple]) -> list[dict]:
 # HEADER  (replaces sidebar branding)
 # ─────────────────────────────────────────────────────────────
 
-hcol1, hcol2 = st.columns([5, 1])
-with hcol1:
-    st.markdown("""
-<div class='header-banner'>
+st.markdown("""
+<div class='corvus-header'>
   <div>
-    <div style='font-size:26px;font-weight:700;color:var(--text-primary);letter-spacing:0.05em;'>
-      🛡️ ThreatScope Intelligence Platform
-    </div>
-    <div style='font-size:13px;color:var(--text-muted);margin-top:4px;font-family:JetBrains Mono,monospace;'>
-      IOC Checking · IOC Hunting · Mail Analysis · Threat Intelligence · OSINT
-    </div>
+    <div class='corvus-logo'>CORV<span>US</span></div>
+    <div class='corvus-tagline'>Unified Threat Intelligence Platform</div>
+  </div>
+  <div style='display:flex;gap:8px;align-items:center;'>
+    <span class='corvus-pill' style='background:#ff3f00;color:#fff;'>IOC CHECK</span>
+    <span class='corvus-pill' style='background:#fff;color:#111;border:1.5px solid #333;'>BULK</span>
+    <span class='corvus-pill' style='background:#fff;color:#111;border:1.5px solid #333;'>MAIL</span>
+    <span class='corvus-pill' style='background:#fff;color:#111;border:1.5px solid #333;'>HUNT</span>
+    <span class='corvus-pill' style='background:#fff;color:#111;border:1.5px solid #333;'>OSINT</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
-
-with hcol2:
-    st.markdown("<br>", unsafe_allow_html=True)
-    theme_choice = st.selectbox(
-        "🎨 Theme",
-        options=list(THEMES.keys()),
-        index=list(THEMES.keys()).index(st.session_state["theme"]),
-        key="_theme_select",
-        label_visibility="collapsed",
-    )
-    if theme_choice != st.session_state["theme"]:
-        st.session_state["theme"] = theme_choice
-        st.rerun()
 
 # ─────────────────────────────────────────────────────────────
 # MAIN TABS  (Settings is now the 7th tab — replaces sidebar)
 # ─────────────────────────────────────────────────────────────
 
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
-    "🔍 IOC Check",
-    "🎯 Bulk IOC Check",
-    "📧 Mail Analysis",
-    "🕵️ IOC Hunting",
-    "🌐 OSINT",
-    "📊 Results & Export",
-    "⚙️ Settings",
+    "IOC CHECK",
+    "BULK CHECK",
+    "MAIL ANALYSIS",
+    "IOC HUNTING",
+    "OSINT",
+    "RESULTS & EXPORT",
+    "SETTINGS",
 ])
 
 # ════════════════════════════════════════════════════════════════
 # TAB 7 — SETTINGS  (API keys — moved from sidebar)
 # ════════════════════════════════════════════════════════════════
 with tab7:
-    st.markdown("### ⚙️ API Configuration")
+    st.markdown("### API CONFIGURATION")
     st.markdown(
         "<div style='font-size:13px;color:var(--text-muted);margin-bottom:16px;'>"
         "Keys are stored in Streamlit session state only — never written to disk from here.<br>"
@@ -1372,12 +1392,12 @@ with tab6:
         with exp_col1:
             csv_data = filtered.to_csv(index=False).encode("utf-8")
             st.download_button("⬇️ Download CSV", data=csv_data,
-                               file_name=f"threatscope_{datetime.utcnow():%Y%m%d_%H%M%S}.csv",
+                               file_name=f"corvus_{datetime.utcnow():%Y%m%d_%H%M%S}.csv",
                                mime="text/csv")
         with exp_col2:
             json_data = filtered.to_json(orient="records", indent=2).encode("utf-8")
             st.download_button("⬇️ Download JSON", data=json_data,
-                               file_name=f"threatscope_{datetime.utcnow():%Y%m%d_%H%M%S}.json",
+                               file_name=f"corvus_{datetime.utcnow():%Y%m%d_%H%M%S}.json",
                                mime="application/json")
         with exp_col3:
             if st.button("🗑️ Clear all results", key="btn_clear_results"):
